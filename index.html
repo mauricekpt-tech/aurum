@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURUM LTD</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
+body{background:#fff;color:#111;padding:12px;padding-bottom:30px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:26px;font-weight:900;letter-spacing:2px;color:#c9a227}
+.logo span{font-size:10px;display:block;letter-spacing:3px;color:#999;font-weight:400}
+.live{font-size:11px;color:#1db954;font-weight:700}
+.live i{width:8px;height:8px;background:#1db954;border-radius:50%;display:inline-block}
+.cards{display:flex;gap:8px;margin:14px 0}
+.card{flex:1;border:1px solid #eee;border-radius:10px;padding:10px;text-align:center}
+.card b{font-size:14px}
+.card p{font-size:15px;font-weight:800;margin:4px 0}
+.card span{font-size:11px;color:#1db954}
+.market{border:1px solid #eee;border-radius:12px;padding:12px}
+.m-head{display:flex;justify-content:space-between}
+.m-head h3{font-size:14px}
+.m-head p{font-size:20px;font-weight:900}
+.m-head p span{font-size:12px;color:#1db954}
+#chart{width:100%;height:220px;margin:10px 0}
+.times{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.times button{border:1px solid #ddd;background:#fff;padding:6px 10px;border-radius:20px;font-size:11px;cursor:pointer}
+.times button.active{background:#111;color:#fff;border-color:#111}
+.trade{display:flex;gap:8px;margin:12px 0}
+.buy{flex:1;background:#1db954;color:#fff;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:16px}
+.mid{flex:1;text-align:center;border:1px solid #eee;border-radius:8px;padding:8px;font-weight:800}
+.sell{flex:1;background:#e53935;color:#fff;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:16px}
+.amount{display:flex;justify-content:space-between;align-items:center;margin:10px 0}
+.amount input{width:110px;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center;font-weight:800}
+.wallet{display:flex;gap:8px}
+.wallet div{flex:1;border:1px solid #eee;border-radius:10px;padding:12px;text-align:center}
+.wallet b{font-size:18px}
+.news{margin-top:14px;border:1px solid #d4edda;border-radius:10px;padding:12px;background:#f0fff4}
+.news h4{color:#1db954;font-size:13px;margin-bottom:6px}
+.news p{font-size:13px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="top"><div class="logo">AURUM LTD<span>PRECIOUS METALS EXCHANGE</span></div><div class="live"><i></i> LIVE ONLINE</div></div>
+<div class="cards">
+<div class="card"><b>24K GOLD</b><p>$2,642.50</p><span>▲ +1.24%</span></div>
+<div class="card"><b>22K GOLD</b><p>$2,421.80</p><span>▲ +1.18%</span></div>
+<div class="card"><b>18K GOLD</b><p>$1,981.90</p><span>▲ +0.96%</span></div>
+</div>
+<div class="market">
+<div class="m-head"><div><h3>LIVE GOLD MARKET</h3><p>$2,642.50 <span>▲ +1.24%</span></p></div><div style="text-align:right;font-size:12px;color:#888">24K GOLD<br><b style="color:#111">USD / OZ</b></div></div>
+<canvas id="chart"></canvas>
+<div class="times" id="times">
+<button class="active">1 MIN</button>
+<button>5 MIN</button>
+<button>1 HR</button>
+<button>1 DAY</button>
+<button>1 MONTH</button>
+</div>
+</div>
+<div class="trade"><button class="buy">BUY</button><div class="mid">USD ▼</div><button class="sell">SELL</button></div>
+<div class="amount"><div><b>24K AMOUNT</b><br><span style="color:#888;font-size:12px">Select quantity</span></div><input value="0.50 oz"></div>
+<div class="wallet"><div><span style="color:#888;font-size:11px">WALLET</span><br><b>$12,450</b></div><div><span style="color:#888;font-size:11px">GOLD IN STORE</span><br><b>15.2 g</b></div></div>
+<div class="news"><h4>● BREAKING NEWS</h4><p>Gold demand surges as central banks increase reserves. Market analysts predict continued upward momentum for precious metals in coming weeks.</p></div>
+<script>
+const c=document.getElementById('chart'),ctx=c.getContext('2d');
+function draw(){
+  c.width=c.offsetWidth; c.height=220;
+  ctx.clearRect(0,0,c.width,c.height);
+  let price=2642, x=10;
+  const step=(c.width-20)/28;
+  for(let i=0;i<28;i++){
+    let open=price, close=price+(Math.random()*14-7);
+    let high=Math.max(open,close)+Math.random()*6;
+    let low=Math.min(open,close)-Math.random()*6;
+    let y=(v)=> 200 - ((v-2600)/80)*180;
+    ctx.strokeStyle= close>=open ? '#1db954':'#e53935';
+    ctx.fillStyle= close>=open ? '#1db954':'#e53935';
+    ctx.beginPath(); ctx.moveTo(x+step/2, y(high)); ctx.lineTo(x+step/2, y(low)); ctx.stroke();
+    ctx.fillRect(x+2, y(Math.max(open,close)), step-4, Math.max(3, Math.abs(y(open)-y(close))));
+    price=close; x+=step;
+  }
+}
+draw(); setInterval(draw, 2500);
+document.querySelectorAll('#times button').forEach(b=>{
+  b.onclick=()=>{ document.querySelectorAll('#times button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); draw(); }
+});
+</script>
+</body>
+</html>
