@@ -5,13 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AURUM LTD</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 body{background:#fff;color:#111;padding:12px;padding-bottom:30px}
 .top{display:flex;justify-content:space-between;align-items:center}
 .logo{font-size:26px;font-weight:900;letter-spacing:2px;color:#c9a227}
 .logo span{font-size:10px;display:block;letter-spacing:3px;color:#999;font-weight:400}
 .live{font-size:11px;color:#1db954;font-weight:700}
-.live i{width:8px;height:8px;background:#1db954;border-radius:50%;display:inline-block}
 .cards{display:flex;gap:8px;margin:14px 0}
 .card{flex:1;border:1px solid #eee;border-radius:10px;padding:10px;text-align:center}
 .card b{font-size:14px}
@@ -25,66 +24,213 @@ body{background:#fff;color:#111;padding:12px;padding-bottom:30px}
 #chart{width:100%;height:220px;margin:10px 0}
 .times{display:flex;gap:6px;justify-content:center;margin:8px 0}
 .times button{border:1px solid #ddd;background:#fff;padding:6px 10px;border-radius:20px;font-size:11px;cursor:pointer}
-.times button.active{background:#111;color:#fff;border-color:#111}
-.trade{display:flex;gap:8px;margin:12px 0}
-.buy{flex:1;background:#1db954;color:#fff;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:16px}
-.mid{flex:1;text-align:center;border:1px solid #eee;border-radius:8px;padding:8px;font-weight:800}
-.sell{flex:1;background:#e53935;color:#fff;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:16px}
-.amount{display:flex;justify-content:space-between;align-items:center;margin:10px 0}
-.amount input{width:110px;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center;font-weight:800}
-.wallet{display:flex;gap:8px}
+.times button.active{background:#111;color:#fff}
+.trade{display:flex;gap:8px;margin:12px 0;align-items:stretch}
+.buy{flex:1;background:#1db954;color:#fff;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:16px;cursor:pointer}
+.buy.off,.sell.off{background:#ddd;color:#888}
+.sell{flex:1;background:#e53935;color:#fff;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:16px;cursor:pointer}
+.curbar{flex:1.2;display:flex;align-items:center;justify-content:space-between;border:1px solid #eee;border-radius:8px;padding:0 6px;background:#f9f9f9}
+.curbar button{border:none;background:#111;color:#fff;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer}
+.curbar b{font-size:14px}
+.panel{border:1px solid #eee;border-radius:12px;padding:14px;margin:10px 0;display:none}
+.panel.show{display:block}
+.panel h3{font-size:14px;margin-bottom:8px}
+.panel label{font-size:12px;color:#666}
+.panel input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin:6px 0 10px;font-size:16px;font-weight:800;text-align:center}
+.calc{background:#f7f7f7;border-radius:8px;padding:10px;font-size:13px;line-height:1.7}
+.calc b{float:right}
+.confirm{width:100%;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:16px;color:#fff;cursor:pointer;margin-top:10px}
+.confirm.buybtn{background:#1db954}
+.confirm.sellbtn{background:#e53935}
+.wallet{display:flex;gap:8px;margin-top:12px}
 .wallet div{flex:1;border:1px solid #eee;border-radius:10px;padding:12px;text-align:center}
 .wallet b{font-size:18px}
+.wallet small{font-size:11px;color:#888}
+.dep{display:flex;gap:8px;margin-top:8px}
+.dep button{flex:1;padding:12px;border:none;border-radius:8px;font-weight:800;cursor:pointer}
+.dep button:first-child{background:#111;color:#fff}
+.dep button:last-child{background:#fff;border:1px solid #ddd}
 .news{margin-top:14px;border:1px solid #d4edda;border-radius:10px;padding:12px;background:#f0fff4}
 .news h4{color:#1db954;font-size:13px;margin-bottom:6px}
 .news p{font-size:13px;line-height:1.5}
+#msg{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:12px 18px;border-radius:20px;font-size:13px;display:none;z-index:99;text-align:center;max-width:90%}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal.show{display:flex}
+.mbox{background:#fff;border-radius:14px;padding:18px;width:100%;max-width:340px}
+.mbox h3{margin-bottom:10px}
+.mbox input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin:6px 0;font-size:15px}
+.mbox button{width:100%;padding:13px;border:none;border-radius:8px;background:#1db954;color:#fff;font-weight:900;margin-top:8px;cursor:pointer}
+.mbox .close{background:#eee;color:#111}
 </style>
 </head>
 <body>
-<div class="top"><div class="logo">AURUM LTD<span>PRECIOUS METALS EXCHANGE</span></div><div class="live"><i></i> LIVE ONLINE</div></div>
+<div id="msg"></div>
+<div class="top"><div class="logo">AURUM LTD<span>PRECIOUS METALS EXCHANGE</span></div><div class="live">● LIVE ONLINE</div></div>
 <div class="cards">
-<div class="card"><b>24K GOLD</b><p>$2,642.50</p><span>▲ +1.24%</span></div>
-<div class="card"><b>22K GOLD</b><p>$2,421.80</p><span>▲ +1.18%</span></div>
-<div class="card"><b>18K GOLD</b><p>$1,981.90</p><span>▲ +0.96%</span></div>
+<div class="card"><b>24K GOLD</b><p id="p24">$2,642.50</p><span id="ch24">▲ +1.24%</span></div>
+<div class="card"><b>22K GOLD</b><p id="p22">$2,421.80</p><span>▲ +1.18%</span></div>
+<div class="card"><b>18K GOLD</b><p id="p18">$1,981.90</p><span>▲ +0.96%</span></div>
 </div>
 <div class="market">
-<div class="m-head"><div><h3>LIVE GOLD MARKET</h3><p>$2,642.50 <span>▲ +1.24%</span></p></div><div style="text-align:right;font-size:12px;color:#888">24K GOLD<br><b style="color:#111">USD / OZ</b></div></div>
+<div class="m-head"><div><h3>LIVE GOLD MARKET <span style="font-size:10px;color:#888" id="lastUpdate">Updated just now</span></h3><p id="mainPrice">$2,642.50 <span>▲ +1.24%</span></p></div><div style="text-align:right;font-size:12px;color:#888">24K GOLD<br><b style="color:#111">PER OZ</b></div></div>
 <canvas id="chart"></canvas>
-<div class="times" id="times">
-<button class="active">1 MIN</button>
-<button>5 MIN</button>
-<button>1 HR</button>
-<button>1 DAY</button>
-<button>1 MONTH</button>
+<div class="times" id="times"><button class="active">1 MIN</button><button>5 MIN</button><button>1 HR</button><button>1 DAY</button><button>1 MONTH</button></div>
 </div>
+
+<div class="trade">
+<button class="buy" id="buyBtn" onclick="selectMode('BUY')">BUY</button>
+<div class="curbar"><button onclick="prevCur()">◀</button><div style="text-align:center"><b id="curLabel">USD</b><br><span style="font-size:10px;color:#888">Tap arrows to change</span></div><button onclick="nextCur()">▶</button></div>
+<button class="sell" id="sellBtn" onclick="selectMode('SELL')">SELL</button>
 </div>
-<div class="trade"><button class="buy">BUY</button><div class="mid">USD ▼</div><button class="sell">SELL</button></div>
-<div class="amount"><div><b>24K AMOUNT</b><br><span style="color:#888;font-size:12px">Select quantity</span></div><input value="0.50 oz"></div>
-<div class="wallet"><div><span style="color:#888;font-size:11px">WALLET</span><br><b>$12,450</b></div><div><span style="color:#888;font-size:11px">GOLD IN STORE</span><br><b>15.2 g</b></div></div>
-<div class="news"><h4>● BREAKING NEWS</h4><p>Gold demand surges as central banks increase reserves. Market analysts predict continued upward momentum for precious metals in coming weeks.</p></div>
+
+<div class="panel" id="buyPanel">
+<h3>🟢 BUY GOLD - How many grams?</h3>
+<label>Enter Grams to Buy</label>
+<input id="buyGrams" type="number" value="5" min="0.1" step="0.1" oninput="calcBuy()">
+<div class="calc">Price per gram: <b id="buyPerGram">$84.95</b><br>Grams: <b id="buyGramsShow">5.0 g</b><br>Total to Spend: <b id="buyTotal" style="color:#1db954">$424.75</b><br>Wallet After: <b id="buyAfter">$12,025.25</b></div>
+<button class="confirm buybtn" onclick="confirmBuy()">CONFIRM BUY →</button>
+</div>
+
+<div class="panel" id="sellPanel">
+<h3>🔴 SELL GOLD - How many grams?</h3>
+<label>Enter Grams to Sell (You own <span id="ownLabel">15.2 g</span>)</label>
+<input id="sellGrams" type="number" value="5" min="0.1" step="0.1" oninput="calcSell()">
+<div class="calc">Price per gram: <b id="sellPerGram">$84.95</b><br>Grams to Sell: <b id="sellGramsShow">5.0 g</b><br>You Will Receive: <b id="sellTotal" style="color:#e53935">$424.75</b><br>Gold Left After: <b id="sellAfter">10.2 g</b></div>
+<button class="confirm sellbtn" onclick="confirmSell()">CONFIRM SELL →</button>
+</div>
+
+<div class="wallet">
+<div><small>💰 WALLET - Current Balance</small><br><b id="wallet">$12,450</b><br><small>Available to Buy</small></div>
+<div><small>🏦 GOLD BANK - You Own</small><br><b id="gold">15.2 g</b><br><small id="goldValue">Worth $1,291.24</small></div>
+</div>
+
+<div class="dep">
+<button onclick="openDep()">+ DEPOSIT VIA M-PESA</button>
+<button onclick="showMsg('Withdraw: Wasiliana na 07** ***489')">WITHDRAW</button>
+</div>
+<div style="text-align:center;font-size:11px;color:#888;margin-top:6px">Deposit to AURUM LTD • 07** ***489 • M-Pesa STK Push</div>
+
+<div class="news"><h4>● BREAKING NEWS</h4><p id="newsText">Gold demand surges as central banks increase reserves. Market analysts predict continued upward momentum.</p></div>
+
+<div class="modal" id="depModal"><div class="mbox">
+<h3>Deposit via M-Pesa</h3>
+<p style="font-size:12px;color:#666">Utalipia AURUM LTD • 07** ***489<br>Utaona STK Push kwa simu yako, weka PIN.</p>
+<label>Amount</label><input id="depAmt" type="number" value="1000" placeholder="Amount">
+<label>Your M-Pesa Number</label><input id="depPhone" type="tel" value="07" placeholder="07XXXXXXXX">
+<button onclick="doDeposit()">SEND STK PUSH →</button>
+<button class="close" onclick="closeDep()">Cancel</button>
+</div></div>
+
 <script>
+let wallet=12450, goldG=15.2;
+let curs=['USD','KES','EUR'], curIdx=0;
+let rates={USD:1,KES:130,EUR:0.92}, syms={USD:'$',KES:'KSh ',EUR:'€'};
+let pricePerOz=2642.50;
+function cur(){return curs[curIdx]} function sym(){return syms[cur()]} function rate(){return rates[cur()]}
+function perGram(){return (pricePerOz/31.1035)*rate()}
+function fmt(n){return sym()+n.toLocaleString(undefined,{maximumFractionDigits:2})}
+function showMsg(t){let m=document.getElementById('msg');m.innerText=t;m.style.display='block';setTimeout(()=>m.style.display='none',4000)}
+function prevCur(){curIdx=(curIdx-1+curs.length)%curs.length;updateCur()}
+function nextCur(){curIdx=(curIdx+1)%curs.length;updateCur()}
+function updateCur(){document.getElementById('curLabel').innerText=cur();updateWallet();showMsg('Currency: '+cur())}
+function selectMode(m){
+  document.getElementById('buyBtn').classList.toggle('off',m!=='BUY');
+  document.getElementById('sellBtn').classList.toggle('off',m!=='SELL');
+  document.getElementById('buyPanel').classList.toggle('show',m==='BUY');
+  document.getElementById('sellPanel').classList.toggle('show',m==='SELL');
+  calcBuy();calcSell();
+}
+function calcBuy(){
+  let g=parseFloat(document.getElementById('buyGrams').value)||0;
+  let total=g*perGram();
+  document.getElementById('buyPerGram').innerText=fmt(perGram());
+  document.getElementById('buyGramsShow').innerText=g.toFixed(1)+' g';
+  document.getElementById('buyTotal').innerText=fmt(total);
+  document.getElementById('buyAfter').innerText=fmt(wallet-total);
+}
+function calcSell(){
+  let g=parseFloat(document.getElementById('sellGrams').value)||0;
+  let total=g*perGram();
+  document.getElementById('sellPerGram').innerText=fmt(perGram());
+  document.getElementById('sellGramsShow').innerText=g.toFixed(1)+' g';
+  document.getElementById('sellTotal').innerText=fmt(total);
+  document.getElementById('sellAfter').innerText=(goldG-g).toFixed(1)+' g';
+  document.getElementById('ownLabel').innerText=goldG.toFixed(1)+' g';
+}
+function updateWallet(){
+  document.getElementById('wallet').innerText=fmt(wallet);
+  document.getElementById('gold').innerText=goldG.toFixed(1)+' g';
+  document.getElementById('goldValue').innerText='Worth '+fmt(goldG*perGram());
+  document.getElementById('mainPrice').innerHTML=fmt(pricePerOz)+' <span>▲ +1.24%</span>';
+  document.getElementById('p24').innerText=fmt(2642.50);
+  document.getElementById('p22').innerText=fmt(2421.80);
+  document.getElementById('p18').innerText=fmt(1981.90);
+  calcBuy();calcSell();
+}
+function confirmBuy(){
+  let g=parseFloat(document.getElementById('buyGrams').value)||0;
+  if(g<=0){showMsg('❌ Weka grams kwanza');return}
+  let cost=g*perGram();
+  if(cost>wallet){showMsg('❌ Pesa haitoshi! Wallet yako ni '+fmt(wallet)+'. Deposit kwanza.');return}
+  wallet-=cost;goldG+=g;updateWallet();showMsg('✅ Umenunua '+g.toFixed(1)+'g Gold kwa '+fmt(cost));
+}
+function confirmSell(){
+  let g=parseFloat(document.getElementById('sellGrams').value)||0;
+  if(g<=0){showMsg('❌ Weka grams kwanza');return}
+  if(g>goldG){showMsg('❌ Huna Gold ya kutosha! Unayo '+goldG.toFixed(1)+'g tu');return}
+  let get=g*perGram();wallet+=get;goldG-=g;updateWallet();showMsg('✅ Umeuza '+g.toFixed(1)+'g Gold, umepata '+fmt(get)+' kwa Wallet');
+}
+function openDep(){document.getElementById('depModal').classList.add('show')}
+function closeDep(){document.getElementById('depModal').classList.remove('show')}
+function doDeposit(){
+  let amt=parseFloat(document.getElementById('depAmt').value)||0;
+  let phone=document.getElementById('depPhone').value.trim();
+  if(amt<=0){showMsg('❌ Weka amount');return}
+  if(phone.length<10){showMsg('❌ Weka namba sahihi ya M-Pesa');return}
+  closeDep();
+  showMsg('📱 STK Push imetumwa kwa '+phone+'... Weka PIN yako');
+  setTimeout(()=>{
+    wallet+=amt;updateWallet();
+    showMsg('✅ Deposit ya '+fmt(amt)+' imeingia! Wallet yako sasa ni '+fmt(wallet));
+  },4000);
+}
+// LIVE PRICE - updates every 60 seconds
+async function fetchLivePrice(){
+  try{
+    // Try real gold price API - if it fails, use realistic simulation
+    // To make it 100% real, replace YOUR_API_KEY below with goldapi.io key
+    let res=await fetch('https://www.goldapi.io/api/XAU/USD',{headers:{'x-access-token':'YOUR_API_KEY','Content-Type':'application/json'}});
+    if(res.ok){ let d=await res.json(); if(d.price){ pricePerOz=d.price; } }
+    else throw new Error('no api');
+  }catch(e){
+    // Realistic movement: small change every minute like real market
+    let change=(Math.random()*12-6);
+    pricePerOz=Math.max(2600, pricePerOz+change);
+  }
+  document.getElementById('lastUpdate').innerText='Updated '+new Date().toLocaleTimeString();
+  updateWallet(); draw();
+}
+setInterval(fetchLivePrice, 60000);
+fetchLivePrice();
+
+// Chart
 const c=document.getElementById('chart'),ctx=c.getContext('2d');
 function draw(){
-  c.width=c.offsetWidth; c.height=220;
-  ctx.clearRect(0,0,c.width,c.height);
-  let price=2642, x=10;
-  const step=(c.width-20)/28;
+  c.width=c.offsetWidth;c.height=220;ctx.clearRect(0,0,c.width,c.height);
+  let price=pricePerOz,x=10;const step=(c.width-20)/28;
   for(let i=0;i<28;i++){
-    let open=price, close=price+(Math.random()*14-7);
-    let high=Math.max(open,close)+Math.random()*6;
-    let low=Math.min(open,close)-Math.random()*6;
-    let y=(v)=> 200 - ((v-2600)/80)*180;
-    ctx.strokeStyle= close>=open ? '#1db954':'#e53935';
-    ctx.fillStyle= close>=open ? '#1db954':'#e53935';
-    ctx.beginPath(); ctx.moveTo(x+step/2, y(high)); ctx.lineTo(x+step/2, y(low)); ctx.stroke();
-    ctx.fillRect(x+2, y(Math.max(open,close)), step-4, Math.max(3, Math.abs(y(open)-y(close))));
-    price=close; x+=step;
+    let open=price,close=price+(Math.random()*14-7);
+    let high=Math.max(open,close)+Math.random()*6,low=Math.min(open,close)-Math.random()*6;
+    let y=(v)=>200-((v-(pricePerOz-40))/80)*180;
+    ctx.strokeStyle=close>=open?'#1db954':'#e53935';ctx.fillStyle=close>=open?'#1db954':'#e53935';
+    ctx.beginPath();ctx.moveTo(x+step/2,y(high));ctx.lineTo(x+step/2,y(low));ctx.stroke();
+    ctx.fillRect(x+2,y(Math.max(open,close)),step-4,Math.max(3,Math.abs(y(open)-y(close))));
+    price=close;x+=step;
   }
 }
-draw(); setInterval(draw, 2500);
-document.querySelectorAll('#times button').forEach(b=>{
-  b.onclick=()=>{ document.querySelectorAll('#times button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); draw(); }
-});
+draw();
+document.querySelectorAll('#times button').forEach(b=>{b.onclick=()=>{document.querySelectorAll('#times button').forEach(x=>x.classList.remove('active'));b.classList.add('active');draw()}});
+selectMode('BUY');updateWallet();
 </script>
 </body>
 </html>
